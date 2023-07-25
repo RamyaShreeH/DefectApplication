@@ -30,8 +30,9 @@ def add():
 
 # Gets the list of application.
 @app.route('/applications', methods = ['GET'])
-def get_all_applicatios():
-    applications = mongo.db.db1.find()
+def get_all_applications():
+    page = request.args.get('page')
+    applications = mongo.db.db1.find({}).skip(int(page)*2).limit(2)
     response = dumps(applications)
     return response
 
@@ -105,7 +106,9 @@ def get_by_componentid(id):
 # Get by application id.
 @app.route('/commentByApplicationId/<application_id>', methods = ['GET'])
 def get_by_applicationid(application_id):
-    comment = mongo.db.comment.find({'applicationId': application_id})
+    page = request.args.get('page','')
+    print("Page:", page)
+    comment = mongo.db.comment.find({'applicationId': application_id}).skip(int(page)*2).limit(2)
     print("Comment By appliaction Id:", comment)
     response = dumps(comment)
     return response
